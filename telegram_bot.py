@@ -50,10 +50,10 @@ def select_label(train_data, update, context):
 
 def callback_train(update, context):
     train_data = context.chat_data['train_data']
-    label = ''.join(update.callback_query.data.split(', ')[1:])
+    menu = ''.join(update.callback_query.data.split(', ')[1:])
 
-    store_training(train_data, get_korean_menu(label))
-    context.bot.edit_message_text(f"{label}을/를 선택하였습니다.",
+    store_training(train_data, get_label(menu))
+    context.bot.edit_message_text(f"{menu}을/를 선택하였습니다.",
                                   chat_id=update.callback_query.message.chat_id,
                                   message_id=update.callback_query.message.message_id)
 
