@@ -1,6 +1,6 @@
 from telegram.ext import Updater
 
-from data import label_menu_data
+from data import label_menu_data, get_label, get_korean_menu
 from menu_recommend import recommend_menu
 
 import logging
@@ -23,7 +23,7 @@ def recommend_message_handler(update, context):
     context.chat_data['train_data'] = message
 
     label = recommend_menu(message)
-    recommended_menu = label_menu_data[label]
+    recommended_menu = get_korean_menu(label)
     respond_message = f"메뉴로 {recommended_menu} 먹는 건 어떤가요?"
     context.bot.send_message(chat_id=update.effective_chat.id, text=respond_message)
 
@@ -51,8 +51,8 @@ def select_label(train_data, update, context):
 def callback_train(update, context):
     train_data = context.chat_data['train_data']
     label = ''.join(update.callback_query.data.split(', ')[1:])
-    inv_label_menu_data = {v: k for k, v in label_menu_data.items()}
-    store_training(train_data, inv_label_menu_data[label])
+
+    store_training(train_data, get_korean_menu(label))
     context.bot.edit_message_text(f"{label}을/를 선택하였습니다.",
                                   chat_id=update.callback_query.message.chat_id,
                                   message_id=update.callback_query.message.message_id)
