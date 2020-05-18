@@ -59,15 +59,22 @@ def callback_train(update, context):
 
 
 def callback_train_again(update, context):
-    context.bot.edit_message_text(f"{update.callback_query.data}을/를 선택하였습니다.",
+    context.bot.edit_message_text("다른 메뉴를 원하시나요?",
                                   chat_id=update.callback_query.message.chat_id,
                                   message_id=update.callback_query.message.message_id)
     train_data = context.chat_data
     select_label(train_data, update, context)
 
 
+def exit_conversation(update, context):
+    context.bot.edit_message_text("감사합니다.",
+                                  chat_id=update.callback_query.message.chat_id,
+                                  message_id=update.callback_query.message.message_id)
+
+
 if __name__ == "__main__":
     import json
+
     with open("secret.json", "r") as json_file:
         secret_data = json.load(json_file)
     token = secret_data['token']
@@ -84,5 +91,6 @@ if __name__ == "__main__":
     dispatcher.add_handler(caps_handler)
     dispatcher.add_handler(CallbackQueryHandler(callback_train, pattern='^음식'))
     dispatcher.add_handler(CallbackQueryHandler(callback_train_again, pattern='^아니요'))
+    dispatcher.add_handler(CallbackQueryHandler(exit_conversation, pattern='^네'))
 
     updater.start_polling()
